@@ -38,6 +38,7 @@ function initPortfolioLightbox() {
 
   let currentTile = null;
   let currentIndex = 0;
+  let opener = null;
 
   function show(i) {
     const items = galleries[currentTile];
@@ -59,10 +60,12 @@ function initPortfolioLightbox() {
     captionEl.textContent = item.title;
   }
 
-  function open(tile, i) {
+  function open(tile, i, trigger) {
     currentTile = tile;
+    opener = trigger;
     show(i);
     lightbox.classList.add('open');
+    lightboxClose.focus();
   }
 
   function close() {
@@ -70,10 +73,11 @@ function initPortfolioLightbox() {
     lightboxImg.src = '';
     lightboxVideo.pause();
     lightboxVideo.src = '';
+    if (opener) opener.focus();
   }
 
-  document.querySelectorAll('.portfolio-tile-frame img[data-gallery-index]').forEach((img) => {
-    img.addEventListener('click', () => open(img.dataset.tile, parseInt(img.dataset.galleryIndex, 10)));
+  document.querySelectorAll('.portfolio-tile-frame[data-gallery-index]').forEach((button) => {
+    button.addEventListener('click', () => open(button.dataset.tile, parseInt(button.dataset.galleryIndex, 10), button));
   });
 
   prevBtn.addEventListener('click', () => show(currentIndex - 1));
